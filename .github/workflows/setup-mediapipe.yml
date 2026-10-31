@@ -18,7 +18,7 @@ jobs:
           node-version: '20'
       - name: Download MediaPipe Tasks Vision
         run: |
-          npm install --no-save --no-package-lock @mediapipe/tasks-vision@0.10.22
+          npm install --no-save --no-package-lock @mediapipe/tasks-vision@latest
           cp node_modules/@mediapipe/tasks-vision/vision_bundle.mjs ./vision_bundle.mjs
           mkdir -p wasm
           cp node_modules/@mediapipe/tasks-vision/wasm/* wasm/
