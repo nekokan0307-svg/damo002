@@ -1,0 +1,33 @@
+name: Install MediaPipe files
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Download MediaPipe Tasks Vision
+        run: |
+          npm install --no-save --no-package-lock @mediapipe/tasks-vision@0.10.22
+          cp node_modules/@mediapipe/tasks-vision/vision_bundle.mjs ./vision_bundle.mjs
+          mkdir -p wasm
+          cp node_modules/@mediapipe/tasks-vision/wasm/* wasm/
+      - name: Commit generated files
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add vision_bundle.mjs wasm/
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add local MediaPipe browser assets'
+            git push
+          fi
